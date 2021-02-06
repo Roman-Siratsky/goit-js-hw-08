@@ -66,7 +66,7 @@ export const images = [
 
 const mainListRef = document.querySelector('.js-gallery');
 const overlayRef = document.querySelector('.js-lightbox');
-const lightboxContent = document.querySelector('.lightbox__content');
+const lightboxContent = document.querySelector('.lightbox__overlay');
 
 images.forEach(image => {
     mainListRef.insertAdjacentHTML('afterbegin',
@@ -135,6 +135,7 @@ function overlayOnClickHide(event) {
     if (event.target === lightboxContent) {
         overlayHide();
     }
+    // console.log(event.target);
 }
 
 
