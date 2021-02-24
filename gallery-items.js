@@ -68,18 +68,20 @@ const mainListRef = document.querySelector('.js-gallery');
 const overlayRef = document.querySelector('.js-lightbox');
 const lightboxContent = document.querySelector('.lightbox__overlay');
 
-images.forEach(image => {
-    mainListRef.insertAdjacentHTML('afterbegin',
+images.forEach((image, index) => {
+    mainListRef.insertAdjacentHTML('beforeend',
  `<li class="gallery__item">
   <a
     class="gallery__link"
     href="${image.original}"
+    data-slider=${index}
   >
     <img
       class="gallery__image"
       src="${image.preview}"
       data-source="${image.original}"
       alt="${image.description}"
+      data-slider=${index}
     />
   </a>
 </li>`)
@@ -90,12 +92,16 @@ const lightBoxImageRef = document.querySelector('.lightbox__image');
 const sliderNextBtnRef = document.querySelector('.js-next');
 const sliderPreviousBtnRef = document.querySelector('.js-previous')
 
+let imageIndex = 1;
+
 function overlayShow(event) {
     event.preventDefault();
     if (event.target.nodeName === 'IMG') {
-        lightBoxRef.classList.toggle('is-open');
-        lightBoxImageRef.src = event.target.dataset.source;
-        lightBoxImageRef.alt = event.target.alt;
+      lightBoxRef.classList.toggle('is-open');
+      lightBoxImageRef.src = event.target.dataset.source;
+      lightBoxImageRef.alt = event.target.alt;
+      imageIndex = event.target.dataset.slider;
+  console.log(imageIndex);
     }
 }
 function overlayHide() {
@@ -103,22 +109,21 @@ function overlayHide() {
     lightBoxImageRef.src = '';
     lightBoxImageRef.alt = '';
 }
-function nextClick() {
-    for (let i = 0; i < images.length; i++){
-        if (lightBoxImageRef.src === images[i].original) {
-            lightBoxImageRef.src = images[i - 1].original;
-            return
-        }
-    }
+
+function nextClick(event) {
+  if (imageIndex === images.length - 1) {
+    return;
+  }
+  imageIndex++;
+  lightBoxImageRef.src = images[imageIndex].original;
 }
 function previousClick() {
-    for (let i = 0; i < images.length; i++){
-        if (lightBoxImageRef.src === images[i].original) {
-            lightBoxImageRef.src = images[i + 1].original;
-            return
-        }
-    }
-}
+  if (imageIndex < 1) {
+    return;
+  }
+    imageIndex--;
+    lightBoxImageRef.src = images[imageIndex].original;
+  }
 function arrowControls(event) {
      if (event.key === 'ArrowRight') {
         nextClick();
@@ -135,7 +140,6 @@ function overlayOnClickHide(event) {
     if (event.target === lightboxContent) {
         overlayHide();
     }
-    // console.log(event.target);
 }
 
 
